@@ -19,21 +19,18 @@ class AmazonUKSpider(scrapy.Spider):
         for product_element in product_elements:
             asin = product_element.attrib['data-asin']
             if asin:
-                name = product_element.css('span.a-size-medium.a-color-base.a-text-normal::text').get()
+                name_parts = product_element.css('span.a-size-medium.a-color-base::text').getall()
+                name = ''.join(name_parts).strip()
                 price = product_element.css('span.a-price .a-offscreen::text').get()
-                if name and self.filter_word and self.filter_word.lower() not in name.lower():
-                    continue
-                if not price:
-                    continue
-                else:
-                    voucher = product_element.css(
-                        'span.a-size-base.s-highlighted-text-padding.aok-inline-block.s-coupon-highlight-color::text').get()
-
-                    # Extract product link
-                    link = product_element.css('a.a-link-normal::attr(href)').get()
-                    if link:  # Make the link absolute if it's relative
-                        link = response.urljoin(link)
-
+                voucher = product_element.css(
+                    'span.a-size-base.s-highlighted-text-padding.aok-inline-block.s-coupon-highlight-color::text').get()
+                # Extract product link
+                link = product_element.css('a.a-link-normal::attr(href)').get()
+                if link:  # Make the link absolute if it's relative
+                    link = response.urljoin(link)
+                # if name and price and (not self.filter_word or self.filter_word.lower() in name.lower()):
+                if (name and price and 'spons%26' not in link and
+                        (not self.filter_word or self.filter_word.lower() in name.lower())):
                     yield {
                         'asin': asin,
                         'filter': self.filter_word if self.filter_word else 'No filter',
