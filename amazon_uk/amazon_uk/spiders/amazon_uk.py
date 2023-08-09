@@ -10,6 +10,7 @@ class AmazonUKSpider(scrapy.Spider):
         search_term = getattr(self, 'search', 'Intel NUC')  # Default to 'Intel NUC' if no search term is provided
         category = getattr(self, 'category', 'computers')  # Default to 'computers' if no category is provided
         self.filter_word = getattr(self, 'filter_word', None)  # Default to None if no filter is provided
+        self.exclude_sponsored = getattr(self, 'exclude_sponsored', 'False') == 'True'
         url = f'https://www.amazon.co.uk/s?k={search_term}&i={category}'
         yield scrapy.Request(url, callback=self.parse)
 
@@ -28,8 +29,11 @@ class AmazonUKSpider(scrapy.Spider):
                 link = product_element.css('a.a-link-normal::attr(href)').get()
                 if link:  # Make the link absolute if it's relative
                     link = response.urljoin(link)
+                is_sponsored = 'spons%26' in link
+                # print(f'sponsored: {is_sponsored}') # debug
                 # if name and price and (not self.filter_word or self.filter_word.lower() in name.lower()):
-                if (name and price and 'spons%26' not in link and
+                if (name and price and
+                        (not (self.exclude_sponsored and is_sponsored)) and
                         (not self.filter_word or self.filter_word.lower() in name.lower())):
                     yield {
                         'asin': asin,
