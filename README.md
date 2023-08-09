@@ -8,6 +8,7 @@ This repository contains a Scrapy spider designed to scrape product information 
 - Filter results by a keyword. For example, you can search for "Intel NUC" in the "computers" category and filter the results by "i7". One keyword per search is supported for now. 
 - Exclude sponsored product links.
 - Pagination support to scrape multiple pages of search results.
+- Save results to a CSV file.
 
 ## Setup and Installation
 
@@ -15,8 +16,7 @@ This repository contains a Scrapy spider designed to scrape product information 
     
         ```bash
         git clone https://github.com/loglux/Amazon_UK.git
-        cd Amazon_UK/amazon_uk
-2. ```
+        cd Amazon_UK/amazon_uk```
 
 2. **Set Up a Virtual Environment**:
 ```bash
