@@ -13,10 +13,10 @@ This repository contains a Scrapy spider designed to scrape product information 
 ## Setup and Installation
 
 1. **Clone the Repository**:
-    
-        ```bash
-        git clone https://github.com/loglux/Amazon_UK.git
-        cd Amazon_UK/amazon_uk```
+```bash
+git clone https://github.com/loglux/Amazon_UK.git
+cd Amazon_UK/amazon_uk
+```
 
 2. **Set Up a Virtual Environment**:
 ```bash
