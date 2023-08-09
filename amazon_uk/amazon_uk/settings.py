@@ -57,14 +57,14 @@ DOWNLOAD_DELAY = 3
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
-#EXTENSIONS = {
-#    "scrapy.extensions.telnet.TelnetConsole": None,
-#}
+EXTENSIONS = {
+    "scrapy.extensions.telnet.TelnetConsole": None,
+}
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 #ITEM_PIPELINES = {
-#    "amazon_uk.pipelines.AmazonUkPipeline": 300,
+#    "amazon_uk.pipelines.DuplicatesPipeline": 300,
 #}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
