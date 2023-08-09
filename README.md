@@ -39,6 +39,7 @@ scrapy crawl amazon_uk -a search_term="iphone" -a category="electronics" -a filt
 - `search`: The search term you want to use (e.g., "Intel NUC").
 - `category`: The category within which to search (e.g., "computers").
 - `filter_word`: An optional parameter to further filter search results by a specific keyword.
+- `exclude_sponsored`: An optional parameter to exclude sponsored product links from the results. Set to "True" to exclude sponsored links.
 
 ## Contributing
 
