@@ -5,23 +5,29 @@ class AmazonUKSpider(scrapy.Spider):
     name = 'amazon_uk'
     allowed_domains = ['www.amazon.co.uk']
 
-    def __init__(self, exception_keywords=None, *args, **kwargs):
-        # Note: Corrected the super call's class name to match the class itself
+
+    def __init__(self, search="Intel NUC", category="computers", filter_words="", exception_keywords="", filter_mode="all", *args, **kwargs):
         super(AmazonUKSpider, self).__init__(*args, **kwargs)
-        self.exception_keywords = exception_keywords.split(',') if exception_keywords else []
+        self.search_term = search
+        self.category = category
+        self.filter_words = [word.strip() for word in filter_words.split(',')] if filter_words else []
+        self.exception_keywords = [word.strip() for word in exception_keywords.split(',')] if exception_keywords else []
+        self.filter_mode = filter_mode
+
+    def start_requests(self):
+        url = f'https://www.amazon.co.uk/s?k={self.search_term}&i={self.category}'
+        yield scrapy.Request(url, callback=self.parse)
 
     def contains_exception_keywords(self, name):
         """Check if the product name contains any exception keyword."""
         return any(keyword.lower() in name.lower() for keyword in self.exception_keywords)
 
-    # Removed the misplaced if condition from here
-
-    def start_requests(self):
-        search_term = getattr(self, 'search', 'Intel NUC')  # Default to 'Intel NUC' if no search term is provided
-        category = getattr(self, 'category', 'computers')  # Default to 'computers' if no category is provided
-        self.filter_word = getattr(self, 'filter_word', None)  # Default to None if no filter is provided
-        url = f'https://www.amazon.co.uk/s?k={search_term}&i={category}'
-        yield scrapy.Request(url, callback=self.parse)
+    def contains_filter_words(self, name):
+        """Check if the product name contains filter words based on the selected filter_mode."""
+        if self.filter_mode == "all":
+            return all(word.lower() in name.lower() for word in self.filter_words)
+        else:  # filter_mode is "any"
+            return any(word.lower() in name.lower() for word in self.filter_words)
 
     def parse(self, response):
         # Extract product details from the search results page
@@ -39,13 +45,13 @@ class AmazonUKSpider(scrapy.Spider):
                 if link:  # Make the link absolute if it's relative
                     link = response.urljoin(link)
 
-                # Moved the condition inside the for loop where name and price are defined
+                # Adjusted condition
                 if (name and price and
-                        (not self.filter_word or self.filter_word.lower() in name.lower()) and
+                        self.contains_filter_words(name) and
                         not self.contains_exception_keywords(name)):
                     yield {
                         'asin': asin,
-                        'filter': self.filter_word if self.filter_word else 'No filter',
+                        'filter': ', '.join(self.filter_words) if self.filter_words else 'No filter',
                         'name': name,
                         'price': price,
                         'voucher': voucher if voucher else 'No voucher',

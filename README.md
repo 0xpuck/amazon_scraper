@@ -5,7 +5,7 @@ This repository contains a Scrapy spider designed to scrape product information 
 ## Features
 
 - Search products by term and category on Amazon UK.
-- Filter results by a keyword. For example, you can search for "Intel NUC" in the "computers" cateory and filter the results by "i7". One keyword per search is supported for now. 
+- Filter results using multiple keywords. For instance, you can search for "Intel NUC" in the "computers" category and filter the results by terms like "i7, 8GB, SSD". The spider supports filtering by multiple comma-separated keywords. 
 - **Exception Keywords Filter**: Exclude products containing specific keywords from the scraped results. For example, you can exclude products containing the word "refurbished" from the results.
 - Pagination support to scrape multiple pages of search results.
 - **Deduplication Filter**: Ensures that the output contains only unique product listings. The deduplication filter inherently removes multiple occurrences of the same sponsored links, ensuring unique listings in the output.
@@ -32,14 +32,18 @@ pip install scrapy
 
 4. **Run the Spider**:
 ```bash
-scrapy crawl amazon_uk -a search_term="iphone" -a category="electronics" -a filter="apple" -a exception_keywords="samsung,huawei" -o iphone.csv
+scrapy crawl amazon_uk -a search="Intel NUC" -a category="computers" -a filter_words="i5,i7" -a exception_keywords="refurbished" -o output.csv
 ```
 
 ## Parameters
 
 - `search`: The search term you want to use (e.g., "Intel NUC").
 - `category`: The category within which to search (e.g., "computers").
-- `filter_word`: An optional parameter to further filter search results by a specific keyword.
+- `filter_words`: Comma-separated list of words to filter search results. Only results containing all of these words will be returned. Use '-a filter_mode="any"', if you need to change this behaviour. Default is an empty string.
+- `filter_mode`: Typically not required, as the default behavior is set to "all", filtering results that contain all specified filter words. However, if you want to change the behavior, set it to "any", which will filter results containing any of the specified filter words.
+- `exception_keywords`: Comma-separated list of words that act as negative filters. Results containing any of these words will be excluded. Default is an empty string.
+
+
 
 ## Deduplication Filter
 To ensure the quality of the scraped data, a deduplication filter is implemented in the Scrapy pipeline. This filter automatically removes any products that have identical or very similar URLs, ensuring that the output contains only unique product listings.
