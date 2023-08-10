@@ -31,7 +31,7 @@ pip install scrapy
 
 4. **Run the Spider**:
 ```bash
-scrapy crawl amazon_uk -a search_term="iphone" -a category="electronics" -a filter="apple" -a exclude_sponsored="True" -o iphone.csv
+scrapy crawl amazon_uk -a search_term="iphone" -a category="electronics" -a filter="apple" -o iphone.csv
 ```
 
 ## Parameters
