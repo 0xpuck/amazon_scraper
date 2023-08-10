@@ -33,7 +33,6 @@ class AmazonUKSpider(scrapy.Spider):
                 # print(f'sponsored: {is_sponsored}') # debug
                 # if name and price and (not self.filter_word or self.filter_word.lower() in name.lower()):
                 if (name and price and
-                        (not (self.exclude_sponsored and is_sponsored)) and
                         (not self.filter_word or self.filter_word.lower() in name.lower())):
                     yield {
                         'asin': asin,
