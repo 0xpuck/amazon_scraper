@@ -7,7 +7,7 @@ This repository contains a Scrapy spider designed to scrape product information 
 - Search products by term and category on Amazon UK.
 - Filter results by a keyword. For example, you can search for "Intel NUC" in the "computers" category and filter the results by "i7". One keyword per search is supported for now. 
 - Pagination support to scrape multiple pages of search results.
-- *Deduplication Filter**: Ensures that the output contains only unique product listings. The deduplication filter inherently removes multiple occurrences of the same sponsored links, ensuring unique listings in the output.
+- **Deduplication Filter**: Ensures that the output contains only unique product listings. The deduplication filter inherently removes multiple occurrences of the same sponsored links, ensuring unique listings in the output.
 - Save results to a CSV file.
 
 ## Setup and Installation
