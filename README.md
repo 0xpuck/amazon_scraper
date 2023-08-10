@@ -32,7 +32,7 @@ pip install scrapy
 
 4. **Run the Spider**:
 ```bash
-scrapy crawl amazon_uk -a search="Intel NUC" -a category="computers" -a filter_words="i5,i7" -a exception_keywords="refurbished" -o output.csv
+scrapy crawl amazon_uk -a search="Intel NUC" -a category="computers" -a filter_words="i5,i7" -a filter_mode="any" -a exception_keywords="refurbished" -o output.csv
 ```
 
 ## Parameters
