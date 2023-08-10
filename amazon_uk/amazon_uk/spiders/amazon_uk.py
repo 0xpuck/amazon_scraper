@@ -4,13 +4,22 @@ import scrapy
 class AmazonUKSpider(scrapy.Spider):
     name = 'amazon_uk'
     allowed_domains = ['www.amazon.co.uk']
-    # filter_word = None
+
+    def __init__(self, exception_keywords=None, *args, **kwargs):
+        # Note: Corrected the super call's class name to match the class itself
+        super(AmazonUKSpider, self).__init__(*args, **kwargs)
+        self.exception_keywords = exception_keywords.split(',') if exception_keywords else []
+
+    def contains_exception_keywords(self, name):
+        """Check if the product name contains any exception keyword."""
+        return any(keyword.lower() in name.lower() for keyword in self.exception_keywords)
+
+    # Removed the misplaced if condition from here
 
     def start_requests(self):
         search_term = getattr(self, 'search', 'Intel NUC')  # Default to 'Intel NUC' if no search term is provided
         category = getattr(self, 'category', 'computers')  # Default to 'computers' if no category is provided
         self.filter_word = getattr(self, 'filter_word', None)  # Default to None if no filter is provided
-        self.exclude_sponsored = getattr(self, 'exclude_sponsored', 'False') == 'True'
         url = f'https://www.amazon.co.uk/s?k={search_term}&i={category}'
         yield scrapy.Request(url, callback=self.parse)
 
@@ -29,11 +38,11 @@ class AmazonUKSpider(scrapy.Spider):
                 link = product_element.css('a.a-link-normal::attr(href)').get()
                 if link:  # Make the link absolute if it's relative
                     link = response.urljoin(link)
-                is_sponsored = 'spons%26' in link
-                # print(f'sponsored: {is_sponsored}') # debug
-                # if name and price and (not self.filter_word or self.filter_word.lower() in name.lower()):
+
+                # Moved the condition inside the for loop where name and price are defined
                 if (name and price and
-                        (not self.filter_word or self.filter_word.lower() in name.lower())):
+                        (not self.filter_word or self.filter_word.lower() in name.lower()) and
+                        not self.contains_exception_keywords(name)):
                     yield {
                         'asin': asin,
                         'filter': self.filter_word if self.filter_word else 'No filter',
@@ -41,7 +50,6 @@ class AmazonUKSpider(scrapy.Spider):
                         'price': price,
                         'voucher': voucher if voucher else 'No voucher',
                         'link': link
-                        # Add more fields as needed
                     }
             else:
                 continue
