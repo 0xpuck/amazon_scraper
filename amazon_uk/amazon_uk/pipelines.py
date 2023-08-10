@@ -34,8 +34,8 @@ class DuplicatesPipeline:
             raise DropItem(f"Duplicate item found: {item}")
         else:
             self.urls_seen.add(normalized_url)
+            item['link'] = normalized_url  # Update the item's link with the purified URL
             return item
-
 
 
 class AmazonUkPipeline:
