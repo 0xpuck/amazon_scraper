@@ -11,8 +11,8 @@ class AmazonUKSpider(scrapy.Spider):
         super(AmazonUKSpider, self).__init__(*args, **kwargs)
         self.search_term = search
         self.category = category
-        self.filter_words = filter_words.split(',') if filter_words else []
-        self.exception_keywords = exception_keywords.split(',') if exception_keywords else []
+        self.filter_words = [word.strip() for word in filter_words.split(',')] if filter_words else []
+        self.exception_keywords = [word.strip() for word in exception_keywords.split(',')] if exception_keywords else []
         self.filter_mode = filter_mode
 
     def start_requests(self):
