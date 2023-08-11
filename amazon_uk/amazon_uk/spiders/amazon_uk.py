@@ -1,4 +1,5 @@
 import scrapy
+from ..items import AmazonUkItem
 
 
 class AmazonUKSpider(scrapy.Spider):
@@ -10,8 +11,8 @@ class AmazonUKSpider(scrapy.Spider):
         super(AmazonUKSpider, self).__init__(*args, **kwargs)
         self.search_term = search
         self.category = category
-        self.filter_words = [word.strip() for word in filter_words.split(',')] if filter_words else []
-        self.exception_keywords = [word.strip() for word in exception_keywords.split(',')] if exception_keywords else []
+        self.filter_words = filter_words.split(',') if filter_words else []
+        self.exception_keywords = exception_keywords.split(',') if exception_keywords else []
         self.filter_mode = filter_mode
 
     def start_requests(self):
@@ -24,10 +25,12 @@ class AmazonUKSpider(scrapy.Spider):
 
     def contains_filter_words(self, name):
         """Check if the product name contains filter words based on the selected filter_mode."""
-        if self.filter_mode == "all":
-            return all(word.lower() in name.lower() for word in self.filter_words)
-        else:  # filter_mode is "any"
-            return any(word.lower() in name.lower() for word in self.filter_words)
+        name_cf = name.casefold()
+        match self.filter_mode:
+            case "any":
+                return any(word.lower().casefold() in name_cf for word in self.filter_words)
+            case _:
+                return all(word.lower().casefold() in name_cf for word in self.filter_words)
 
     def parse(self, response):
         # Extract product details from the search results page
@@ -45,18 +48,18 @@ class AmazonUKSpider(scrapy.Spider):
                 if link:  # Make the link absolute if it's relative
                     link = response.urljoin(link)
 
-                # Adjusted condition
                 if (name and price and
                         self.contains_filter_words(name) and
                         not self.contains_exception_keywords(name)):
-                    yield {
-                        'asin': asin,
-                        'filter': ', '.join(self.filter_words) if self.filter_words else 'No filter',
-                        'name': name,
-                        'price': price,
-                        'voucher': voucher if voucher else 'No voucher',
-                        'link': link
-                    }
+                    item = AmazonUkItem()
+                    item['asin'] = asin
+                    item['filter'] = ', '.join(self.filter_words) if self.filter_words else 'No filter'
+                    item['name'] = name
+                    item['price'] = price
+                    item['voucher'] = voucher if voucher else 'No voucher'
+                    item['link'] = link
+
+                    yield item
             else:
                 continue
 
@@ -64,3 +67,5 @@ class AmazonUKSpider(scrapy.Spider):
         next_page = response.css('a.s-pagination-next::attr(href)').get()
         if next_page:
             yield scrapy.Request(url=response.urljoin(next_page), callback=self.parse)
+
+

@@ -96,3 +96,7 @@ FEED_EXPORT_ENCODING = "utf-8"
 # FEED_EXPORT_DELIMITER = ";"
 
 USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36'
+# Determine columns sequence in CSV file.
+FEED_EXPORT_FIELDS = ["asin", "filter", "name", "price", "voucher", "link"]
+
+
