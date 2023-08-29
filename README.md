@@ -9,6 +9,8 @@ This repository contains a Scrapy spider designed to scrape product information 
 - **Exception Keywords Filter**: Exclude products containing specific keywords from the scraped results. For example, you can exclude products containing the word "refurbished" from the results.
 - Pagination support to scrape multiple pages of search results.
 - **Deduplication Filter**: Ensures that the output contains only unique product listings. The deduplication filter inherently removes multiple occurrences of the same sponsored links, ensuring unique listings in the output.
+- URL Normalisation: Ensures that all URLs in the output are simplified to remove Amazon-specific tags and SEO-friendly slug.
+- Voucher Support: Information about any vouchers available with the product is also included in the results.
 - Save results to a CSV file.
 
 ## Setup and Installation

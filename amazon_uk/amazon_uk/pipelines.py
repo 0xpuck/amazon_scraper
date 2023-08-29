@@ -14,7 +14,6 @@ import logging
 class DuplicatesPipeline:
     def __init__(self):
         self.urls_seen = set()
-
     def process_item(self, item, spider):
         logging.info(f"Processing item: {item['link']}")
         url = item['link']
@@ -28,6 +27,13 @@ class DuplicatesPipeline:
         # Normalizing the URL by removing the /ref=... segment and any query parameters
         parsed = urlparse(url)
         normalized_path = '/'.join(segment for segment in parsed.path.split('/') if not segment.startswith('ref='))
+
+        # Removing the SEO-friendly slug
+        if '/dp/' in normalized_path:
+            normalized_path = '/dp/' + normalized_path.split('/dp/')[-1]
+        elif '/gp/' in normalized_path:
+            normalized_path = '/gp/' + normalized_path.split('/gp/')[-1]
+
         normalized_url = urlunparse((parsed.scheme, parsed.netloc, normalized_path, "", "", ""))
 
         if normalized_url in self.urls_seen:
