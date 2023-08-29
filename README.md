@@ -29,6 +29,20 @@ source venv/bin/activate # On Windows, use venv\Scripts\activate.bat instead
  ```bash
 pip install scrapy
 ````
+
+4. **Run the Spider**:
+```bash
+scrapy crawl amazon_uk -a search="Intel NUC" -a category="computers" -a filter_words="i5,i7" -a filter_mode="any" -a exception_keywords="refurbished" -o output.csv
+```
+
+## Parameters
+
+- `search`: The search term you want to use (e.g., "Intel NUC").
+- `category`: The category within which to search (e.g., "computers").
+- `filter_words`: Comma-separated list of words to filter search results. Only results containing all of these words will be returned. Use '-a filter_mode="any"', if you need to change this behaviour. Default is an empty string.
+- `filter_mode`: Typically not required, as the default behavior is set to "all", filtering results that contain all specified filter words. However, if you want to change the behavior, set it to "any", which will filter results containing any of the specified filter words.
+- `exception_keywords`: Comma-separated list of words that act as negative filters. Results containing any of these words will be excluded. Default is an empty string.
+
 ## Required Twisted Version
 
 This project was created and tested with a specific version of the Twisted library to ensure compatibility and proper functioning with the Scrapy spider. The required Twisted version for this project is **Twisted 22.10.0**.
@@ -50,22 +64,6 @@ To mitigate the compatibility issue and ensure a smooth experience, it is advise
 ```bash
 pip install --upgrade Twisted==22.10.0
 ```
-
-4. **Run the Spider**:
-```bash
-scrapy crawl amazon_uk -a search="Intel NUC" -a category="computers" -a filter_words="i5,i7" -a filter_mode="any" -a exception_keywords="refurbished" -o output.csv
-```
-
-## Parameters
-
-- `search`: The search term you want to use (e.g., "Intel NUC").
-- `category`: The category within which to search (e.g., "computers").
-- `filter_words`: Comma-separated list of words to filter search results. Only results containing all of these words will be returned. Use '-a filter_mode="any"', if you need to change this behaviour. Default is an empty string.
-- `filter_mode`: Typically not required, as the default behavior is set to "all", filtering results that contain all specified filter words. However, if you want to change the behavior, set it to "any", which will filter results containing any of the specified filter words.
-- `exception_keywords`: Comma-separated list of words that act as negative filters. Results containing any of these words will be excluded. Default is an empty string.
-
-
-
 ## Deduplication Filter
 To ensure the quality of the scraped data, a deduplication filter is implemented in the Scrapy pipeline. This filter automatically removes any products that have identical or very similar URLs, ensuring that the output contains only unique product listings.
 
