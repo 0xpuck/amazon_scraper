@@ -16,7 +16,9 @@ class AmazonUKSpider(scrapy.Spider):
         self.filter_mode = filter_mode
 
     def start_requests(self):
-        url = f'https://www.amazon.co.uk/s?k={self.search_term}&i={self.category}'
+        url = f'https://www.amazon.co.uk/s?k={self.search_term}'
+        if self.category:
+            url += f'&i={self.category}'
         yield scrapy.Request(url, callback=self.parse)
 
     def contains_exception_keywords(self, name):
