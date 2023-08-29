@@ -34,6 +34,27 @@ pip install scrapy
 ```bash
 scrapy crawl amazon_uk -a search="Intel NUC" -a category="computers" -a filter_words="i5,i7" -a filter_mode="any" -a exception_keywords="refurbished" -o output.csv
 ```
+## Required Twisted Version
+
+This project was created and tested with a specific version of the Twisted library to ensure compatibility and proper functioning with the Scrapy spider. The required Twisted version for this project is **Twisted 22.10.0**.
+
+### Scrapy Version and Compatibility
+
+At the time this project was created, the latest available version of Scrapy was **Scrapy 2.10.0**. During development and testing, it was confirmed that this version of Scrapy worked seamlessly with Twisted 22.10.0, providing a stable and reliable environment for scraping.
+
+### Compatibility Issue with Newer Twisted Versions
+
+Since software libraries like Scrapy evolve over time, new versions are released to introduce features, improvements, and bug fixes. However, these updates can sometimes lead to compatibility issues with other libraries that the software relies on.
+
+It has been observed that versions of Twisted newer than 22.10.0, such as **Twisted 28.10.0**, can cause compatibility problems with Scrapy 2.10.0. As a result, it is recommended to maintain the specified Twisted version to ensure that the Scrapy spider works as intended.
+
+### Downgrading Twisted for Compatibility
+
+To mitigate the compatibility issue and ensure a smooth experience, it is advised to downgrade Twisted to the required version. You can achieve this by running the following command:
+
+```bash
+pip install --upgrade Twisted==22.10.0
+```
 
 ## Parameters
 
