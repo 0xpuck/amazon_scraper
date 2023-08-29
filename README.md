@@ -29,11 +29,6 @@ source venv/bin/activate # On Windows, use venv\Scripts\activate.bat instead
  ```bash
 pip install scrapy
 ````
-
-4. **Run the Spider**:
-```bash
-scrapy crawl amazon_uk -a search="Intel NUC" -a category="computers" -a filter_words="i5,i7" -a filter_mode="any" -a exception_keywords="refurbished" -o output.csv
-```
 ## Required Twisted Version
 
 This project was created and tested with a specific version of the Twisted library to ensure compatibility and proper functioning with the Scrapy spider. The required Twisted version for this project is **Twisted 22.10.0**.
@@ -54,6 +49,11 @@ To mitigate the compatibility issue and ensure a smooth experience, it is advise
 
 ```bash
 pip install --upgrade Twisted==22.10.0
+```
+
+4. **Run the Spider**:
+```bash
+scrapy crawl amazon_uk -a search="Intel NUC" -a category="computers" -a filter_words="i5,i7" -a filter_mode="any" -a exception_keywords="refurbished" -o output.csv
 ```
 
 ## Parameters
