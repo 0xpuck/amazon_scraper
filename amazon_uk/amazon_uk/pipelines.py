@@ -11,37 +11,39 @@ from scrapy.exceptions import DropItem
 from urllib.parse import unquote, urlparse, urlunparse
 import logging
 
+
+from scrapy.exceptions import DropItem
+from urllib.parse import urlparse
+import logging
+import re  # Regular expression library
+
 class DuplicatesPipeline:
     def __init__(self):
-        self.urls_seen = set()
+        self.urls_seen = set()  # Initialize the set to keep track of URLs
+
     def process_item(self, item, spider):
+        # Log the original item link
         logging.info(f"Processing item: {item['link']}")
-        url = item['link']
 
-        # Check if the URL is a redirect link from Amazon
-        if "www.amazon.co.uk/sspa/click" in url:
-            # Extract the destination URL using the 'url' parameter
-            url_path = unquote(url.split('url=')[1].split('&')[0])
-            url = "https://www.amazon.co.uk" + url_path
+        # Debugging: Print or log the length of self.urls_seen to see how many unique URLs you have processed
+        logging.debug(f"Number of unique URLs seen so far: {len(self.urls_seen)}")
 
-        # Normalizing the URL by removing the /ref=... segment and any query parameters
-        parsed = urlparse(url)
-        normalized_path = '/'.join(segment for segment in parsed.path.split('/') if not segment.startswith('ref='))
+        # Extract the ASIN from the URL using regular expressions
+        match = re.search(r'/dp/([A-Z0-9]{10})', item['link'])
+        if match:
+            asin = match.group(1)  # The ASIN
+            purified_url = f"https://www.amazon.co.uk/dp/{asin}"  # The purified URL
 
-        # Removing the SEO-friendly slug
-        if '/dp/' in normalized_path:
-            normalized_path = '/dp/' + normalized_path.split('/dp/')[-1]
-        elif '/gp/' in normalized_path:
-            normalized_path = '/gp/' + normalized_path.split('/gp/')[-1]
-
-        normalized_url = urlunparse((parsed.scheme, parsed.netloc, normalized_path, "", "", ""))
-
-        if normalized_url in self.urls_seen:
-            raise DropItem(f"Duplicate item found: {item}")
+            # Check if this ASIN has already been seen
+            if purified_url in self.urls_seen:
+                raise DropItem(f"Duplicate item found: {item}")
+            else:
+                self.urls_seen.add(purified_url)  # Add the new ASIN
+                item['link'] = purified_url  # Update the item's link to the purified URL
+                return item  # Return the processed item
         else:
-            self.urls_seen.add(normalized_url)
-            item['link'] = normalized_url  # Update the item's link with the purified URL
-            return item
+            logging.warning(f"Could not extract ASIN from URL: {item['link']}")
+            raise DropItem(f"Could not extract ASIN: {item}")  # Drop the item if ASIN couldn't be extracted
 
 
 class AmazonUkPipeline:

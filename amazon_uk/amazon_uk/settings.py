@@ -64,7 +64,7 @@ EXTENSIONS = {
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    "amazon_uk.pipelines.DuplicatesPipeline": 300,
+    "amazon_uk.pipelines.DuplicatesPipeline": 500,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -96,7 +96,10 @@ FEED_EXPORT_ENCODING = "utf-8"
 # FEED_EXPORT_DELIMITER = ";"
 
 USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36'
+#USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.1938.62'
 # Determine columns sequence in CSV file.
-FEED_EXPORT_FIELDS = ["asin", "filter", "name", "price", "voucher", "link"]
+FEED_EXPORT_FIELDS = ["asin", "filter", "price", "voucher", "name", "link"]
 
 
+# Enables logging for debugging
+# LOG_LEVEL = 'DEBUG'
