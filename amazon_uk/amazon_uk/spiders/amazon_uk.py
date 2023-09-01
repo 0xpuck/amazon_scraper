@@ -7,7 +7,7 @@ class AmazonUKSpider(scrapy.Spider):
     allowed_domains = ['www.amazon.co.uk']
 
 
-    def __init__(self, search="Intel NUC", category="computers", filter_words="", exception_keywords="", filter_mode="all", *args, **kwargs):
+    def __init__(self, search="Intel NUC", category="", filter_words="", exception_keywords="", filter_mode="all", *args, **kwargs):
         super(AmazonUKSpider, self).__init__(*args, **kwargs)
         self.search_term = search
         self.category = category
