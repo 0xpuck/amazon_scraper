@@ -40,7 +40,9 @@ class AmazonUKSpider(scrapy.Spider):
         for product_element in product_elements:
             asin = product_element.attrib['data-asin']
             if asin:
-                name_parts = product_element.css('span.a-size-medium.a-color-base::text').getall()
+                name_parts = product_element.css('span.a-size-base-plus.a-color-base.a-text-normal::text').getall()
+                if not name_parts:
+                    name_parts = product_element.css('span.a-size-medium.a-color-base::text').getall()
                 name = ''.join(name_parts).strip()
                 price = product_element.css('span.a-price .a-offscreen::text').get()
                 voucher = product_element.css(
